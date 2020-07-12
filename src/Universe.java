@@ -42,7 +42,7 @@ public class Universe {
         field[i][j] = condition;
     }
 
-    public boolean aliveCell(Cell<Integer, Integer> cell) {
+    public boolean aliveCell(Cell cell) {
         if (cell.getFirst() < 0 || cell.getSecond() < 0 ||
                 cell.getFirst() >= field.length ||
                 cell.getSecond() >= field[0].length) {
@@ -51,12 +51,12 @@ public class Universe {
         return field[cell.getFirst()][cell.getSecond()];
     }
 
-    private List<Cell<Integer, Integer>> getNeighbours(int i, int j) {
-        List<Cell<Integer, Integer>> result = new ArrayList<>();
+    private List<Cell> getNeighbours(int i, int j) {
+        List<Cell> result = new ArrayList<>();
         for (int di = -1; di <= 1; ++di) {
             for (int dj = -1; dj <= 1; ++dj) {
                 if (di != 0 || dj != 0) {
-                    result.add(new Cell<>(i + di, j + dj));
+                    result.add(new Cell(i + di, j + dj));
                 }
             }
         }
@@ -81,7 +81,7 @@ public class Universe {
         for (int i = 0; i < oldUniverse.getFirstDim(); ++i) {
             for (int j = 0; j < oldUniverse.getSecondDim(); ++j) {
                 set(i, j, willBeAlive(oldUniverse.countAliveNeighbours(i, j),
-                        oldUniverse.aliveCell(new Cell<>(i, j))));
+                        oldUniverse.aliveCell(new Cell(i, j))));
             }
         }
         return Arrays.deepEquals(oldUniverse.field, field);

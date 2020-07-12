@@ -1,17 +1,17 @@
-public class Cell<F, S> {
-    private final F first;
-    private final S second;
+public class Cell {
+    private final int first;
+    private final int second;
 
-    Cell(F first, S second) {
+    Cell(int first, int second) {
         this.first = first;
         this.second = second;
     }
 
-    public F getFirst() {
+    public int getFirst() {
         return first;
     }
 
-    public S getSecond() {
+    public int getSecond() {
         return second;
     }
 }
