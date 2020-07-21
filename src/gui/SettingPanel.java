@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class SettingPanel extends GOLPanel {
+
     public SettingPanel(UniversePanel universePanel) {
         super();
         setLayout(new GridLayout(2, 1));
@@ -12,8 +13,8 @@ public class SettingPanel extends GOLPanel {
     }
 
     private void addButton(String name, ActionListener actionListener) {
-        GOLButton nextButton = new GOLButton(name);
-        nextButton.addActionListener(actionListener);
-        add(nextButton);
+        GOLButton button = new GOLButton(name);
+        button.addActionListener(actionListener);
+        add(button);
     }
 }

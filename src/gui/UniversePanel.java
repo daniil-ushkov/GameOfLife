@@ -12,13 +12,20 @@ public class UniversePanel extends GOLPanel {
     public UniversePanel(int rows, int columns) {
         super();
         universe = new Universe(rows, columns);
-        setPreferredSize(new Dimension(600, 600));
-        setLayout(new GridLayout(rows, columns));
+        GridBagLayout layout = new GridBagLayout();
+        setLayout(layout);
+        GridBagConstraints constraints = new GridBagConstraints();
         field = new CellButton[rows][columns];
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < columns; ++j) {
                 CellButton cell = new CellButton();
                 field[i][j] = cell;
+                if (j + 1 == columns) {
+                    constraints.gridwidth = GridBagConstraints.REMAINDER;
+                } else {
+                    constraints.gridwidth = 1;
+                }
+                layout.setConstraints(cell, constraints);
                 add(cell);
                 cell.addActionListener(cellButtonListener(i, j));
             }

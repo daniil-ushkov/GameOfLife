@@ -9,6 +9,7 @@ public class GUI extends GOLFrame {
         getContentPane().add(universePanel);
         getContentPane().add(settingPanel);
         pack();
+        setResizable(false);
         setVisible(true);
     }
 }
