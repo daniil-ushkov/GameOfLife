@@ -23,7 +23,7 @@ class Cell {
 }
 
 public class Universe {
-    private final boolean[][] field;
+    private boolean[][] field;
 
     public Universe(int rows, int columns) throws IllegalArgumentException {
         field = new boolean[rows][columns];
@@ -55,6 +55,14 @@ public class Universe {
                 field[i][j] = false;
             }
         }
+    }
+
+    public boolean[][] getField() {
+        return field;
+    }
+
+    public void setField(boolean[][] field) {
+        this.field = field;
     }
 
     public void setShape(int i, int j, boolean[][] shape) {
@@ -102,7 +110,8 @@ public class Universe {
     }
 
 //    Changes universe according to rules written in method `willBeAlive`
-    public void nextStep() {
+//    Returns old universe condition
+    public Universe nextStep() {
         Universe oldUniverse = new Universe(Arrays.stream(field)
                 .map(boolean[]::clone)
                 .toArray(boolean[][]::new));
@@ -112,5 +121,6 @@ public class Universe {
                         oldUniverse.aliveCell(new Cell(i, j))));
             }
         }
+        return oldUniverse;
     }
 }

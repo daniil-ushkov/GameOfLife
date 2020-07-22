@@ -1,13 +1,18 @@
 package gui;
 
 import universe.Universe;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Stack;
 
 public class UniversePanel extends GOLPanel {
 
     private final Universe universe;
     private final CellButton[][] field;
+
+    private final Stack<boolean[][]> memoryStack = new Stack<>();
 
     public UniversePanel(int rows, int columns) {
         super();
@@ -65,9 +70,27 @@ public class UniversePanel extends GOLPanel {
         }
     }
 
+    public void start() {
+        //todo
+    }
+
+    public void stop() {
+        //todo
+    }
+
     public void next() {
-        universe.nextStep();
-        showUniverse();
+        Universe oldUniverse = universe.nextStep();
+        if (!Arrays.deepEquals(oldUniverse.getField(), universe.getField())) {
+            memoryStack.push(oldUniverse.getField());
+            showUniverse();
+        }
+    }
+
+    public void prev() {
+        if (!memoryStack.empty()) {
+            universe.setField(memoryStack.pop());
+            showUniverse();
+        }
     }
 
     public void clear() {

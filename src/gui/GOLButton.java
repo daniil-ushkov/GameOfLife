@@ -4,20 +4,20 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GOLButton extends JButton {
-    public GOLButton(String text) {
+    public GOLButton(String text, Color foregroundColor) {
         super(text);
         setPreferredSize(new Dimension(80, 40));
-        setColorScheme();
+        setColorScheme(foregroundColor);
     }
 
     public GOLButton() {
         super();
-        setColorScheme();
+        setColorScheme(Color.WHITE);
     }
 
-    private void setColorScheme() {
+    private void setColorScheme(Color foregroundColor) {
         setBackground(Color.BLACK);
-        setForeground(Color.WHITE);
+        setForeground(foregroundColor);
         setBorder(BorderFactory.createLineBorder(Color.GRAY));
     }
 }
