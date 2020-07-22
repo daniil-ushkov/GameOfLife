@@ -1,5 +1,6 @@
 package gui;
 
+
 import universe.Universe;
 
 import java.awt.*;
@@ -13,6 +14,17 @@ public class UniversePanel extends GOLPanel {
     private final CellButton[][] field;
 
     private final Stack<boolean[][]> memoryStack = new Stack<>();
+
+//    private final static int AUTO_SAVE_LATENCY = 10;
+//    private int changesCounter = 0;
+
+//    private void updateCounter() {
+//        ++changesCounter;
+//        if (changesCounter == AUTO_SAVE_LATENCY) {
+//            memoryStack.push(universe.getFieldCopy());
+//            changesCounter = 0;
+//        }
+//    }
 
     public UniversePanel(int rows, int columns) {
         super();
@@ -42,6 +54,7 @@ public class UniversePanel extends GOLPanel {
     }
 
     private void toggle(int i, int j) {
+//        updateCounter();
         universe.toggle(i, j);
         if (field[i][j].getBackground() == Color.BLACK) {
             field[i][j].setBackground(Color.GREEN);
@@ -94,6 +107,7 @@ public class UniversePanel extends GOLPanel {
     }
 
     public void clear() {
+        memoryStack.push(universe.getFieldCopy());
         universe.clear();
         showUniverse();
     }

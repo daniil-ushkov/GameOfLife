@@ -61,6 +61,10 @@ public class Universe {
         return field;
     }
 
+    public boolean[][] getFieldCopy() {
+        return Arrays.stream(field).map(boolean[]::clone).toArray(boolean[][]::new);
+    }
+
     public void setField(boolean[][] field) {
         this.field = field;
     }
@@ -112,9 +116,7 @@ public class Universe {
 //    Changes universe according to rules written in method `willBeAlive`
 //    Returns old universe condition
     public Universe nextStep() {
-        Universe oldUniverse = new Universe(Arrays.stream(field)
-                .map(boolean[]::clone)
-                .toArray(boolean[][]::new));
+        Universe oldUniverse = new Universe(getFieldCopy());
         for (int i = 0; i < oldUniverse.getRows(); ++i) {
             for (int j = 0; j < oldUniverse.getColumns(); ++j) {
                 set(i, j, willBeAlive(oldUniverse.countAliveNeighbours(i, j),
