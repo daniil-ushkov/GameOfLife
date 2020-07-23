@@ -1,6 +1,5 @@
 package gui;
 
-
 import universe.Universe;
 
 import java.awt.*;
@@ -14,7 +13,7 @@ public class UniversePanel extends GOLPanel {
 
     private boolean startPressed = false;
 
-    private final MemoryStack memoryStack = new MemoryStack();
+    private final Memory memory = new Memory();
 
     public UniversePanel(int rows, int columns) {
         super();
@@ -106,7 +105,7 @@ public class UniversePanel extends GOLPanel {
     private void doNext() {
         Universe oldUniverse = universe.nextStep();
         if (!Arrays.deepEquals(oldUniverse.getField(), universe.getField())) {
-            memoryStack.push(oldUniverse.getField());
+            memory.push(oldUniverse.getField());
             showUniverse();
         } else {
             stop();
@@ -124,8 +123,8 @@ public class UniversePanel extends GOLPanel {
         if (startPressed) {
             return;
         }
-        if (!memoryStack.empty()) {
-            universe.setField(memoryStack.pop());
+        if (!memory.empty()) {
+            universe.setField(memory.pop());
             showUniverse();
         }
     }
@@ -134,7 +133,7 @@ public class UniversePanel extends GOLPanel {
         if (startPressed) {
             stop();
         }
-        memoryStack.push(universe.getFieldCopy());
+        memory.push(universe.getFieldCopy());
         universe.clear();
         showUniverse();
     }
