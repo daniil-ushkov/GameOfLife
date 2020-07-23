@@ -9,6 +9,6 @@ public class GOLFrame extends JFrame {
         getContentPane().setBackground(Color.BLACK);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
-//        setResizable(false);
+        setResizable(false);
     }
 }

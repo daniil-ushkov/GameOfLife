@@ -6,25 +6,15 @@ import universe.Universe;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-import java.util.Stack;
 
 public class UniversePanel extends GOLPanel {
 
     private final Universe universe;
     private final CellButton[][] field;
 
-    private final Stack<boolean[][]> memoryStack = new Stack<>();
+    private boolean startPressed = false;
 
-//    private final static int AUTO_SAVE_LATENCY = 10;
-//    private int changesCounter = 0;
-
-//    private void updateCounter() {
-//        ++changesCounter;
-//        if (changesCounter == AUTO_SAVE_LATENCY) {
-//            memoryStack.push(universe.getFieldCopy());
-//            changesCounter = 0;
-//        }
-//    }
+    private final MemoryStack memoryStack = new MemoryStack();
 
     public UniversePanel(int rows, int columns) {
         super();
@@ -54,7 +44,6 @@ public class UniversePanel extends GOLPanel {
     }
 
     private void toggle(int i, int j) {
-//        updateCounter();
         universe.toggle(i, j);
         if (field[i][j].getBackground() == Color.BLACK) {
             field[i][j].setBackground(Color.GREEN);
@@ -83,23 +72,58 @@ public class UniversePanel extends GOLPanel {
         }
     }
 
+    private void setButtonsEnabled(boolean enable) {
+        for (int i = 0; i < universe.getRows(); ++i) {
+            for (int j = 0; j < universe.getColumns(); ++j) {
+                field[i][j].setEnabled(enable);
+            }
+        }
+    }
+
     public void start() {
-        //todo
+        if (startPressed) {
+            return;
+        }
+        startPressed = true;
+        new Thread(() -> {
+            setButtonsEnabled(false);
+            while (startPressed) {
+                doNext();
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            setButtonsEnabled(true);
+        }).start();
     }
 
     public void stop() {
-        //todo
+        startPressed = false;
     }
 
-    public void next() {
+    private void doNext() {
         Universe oldUniverse = universe.nextStep();
         if (!Arrays.deepEquals(oldUniverse.getField(), universe.getField())) {
             memoryStack.push(oldUniverse.getField());
             showUniverse();
+        } else {
+            stop();
         }
     }
 
+    public void next() {
+        if (startPressed) {
+            return;
+        }
+        doNext();
+    }
+
     public void prev() {
+        if (startPressed) {
+            return;
+        }
         if (!memoryStack.empty()) {
             universe.setField(memoryStack.pop());
             showUniverse();
@@ -107,6 +131,9 @@ public class UniversePanel extends GOLPanel {
     }
 
     public void clear() {
+        if (startPressed) {
+            stop();
+        }
         memoryStack.push(universe.getFieldCopy());
         universe.clear();
         showUniverse();
