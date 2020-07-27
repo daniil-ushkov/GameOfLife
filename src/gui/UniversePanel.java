@@ -2,6 +2,7 @@ package gui;
 
 import universe.Universe;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -79,7 +80,7 @@ public class UniversePanel extends GOLPanel {
         }
     }
 
-    public void start() {
+    public void start(JSlider slider) {
         if (startPressed) {
             return;
         }
@@ -89,7 +90,7 @@ public class UniversePanel extends GOLPanel {
             while (startPressed) {
                 doNext();
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(slider.getValue());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
