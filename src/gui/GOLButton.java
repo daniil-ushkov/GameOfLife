@@ -10,14 +10,9 @@ public class GOLButton extends JButton {
         setColorScheme(foregroundColor);
     }
 
-    public GOLButton() {
-        super();
-        setColorScheme(Color.WHITE);
-    }
-
     private void setColorScheme(Color foregroundColor) {
-        setBackground(Color.BLACK);
+        setBackground(Color.DARK_GRAY);
         setForeground(foregroundColor);
-        setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 }

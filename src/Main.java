@@ -2,6 +2,6 @@ import gui.GUI;
 
 public class Main {
     public static void main(String[] args) {
-        GUI gui = new GUI(30, 50);
+        GUI gui = new GUI(50, 50);
     }
 }

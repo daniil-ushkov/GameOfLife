@@ -2,10 +2,10 @@ package gui;
 
 import universe.Universe;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.function.IntSupplier;
 
 public class UniversePanel extends GOLPanel {
 
@@ -15,6 +15,8 @@ public class UniversePanel extends GOLPanel {
     private boolean startPressed = false;
 
     private final Memory memory = new Memory();
+
+    public final UniverseScrollPane scrollPane = new UniverseScrollPane(this);
 
     public UniversePanel(int rows, int columns) {
         super();
@@ -80,7 +82,7 @@ public class UniversePanel extends GOLPanel {
         }
     }
 
-    public void start(JSlider slider) {
+    public void start(IntSupplier latencySupplier) {
         if (startPressed) {
             return;
         }
@@ -90,7 +92,7 @@ public class UniversePanel extends GOLPanel {
             while (startPressed) {
                 doNext();
                 try {
-                    Thread.sleep(slider.getValue());
+                    Thread.sleep(latencySupplier.getAsInt());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -137,5 +139,23 @@ public class UniversePanel extends GOLPanel {
         memory.push(universe.getFieldCopy());
         universe.clear();
         showUniverse();
+    }
+
+    public void bigger() {
+        for (int i = 0; i < universe.getRows(); ++i) {
+            for (int j = 0; j < universe.getColumns(); ++j) {
+                field[i][j].bigger();
+            }
+        }
+        scrollPane.setViewportView(this);
+    }
+
+    public void smaller() {
+        for (int i = 0; i < universe.getRows(); ++i) {
+            for (int j = 0; j < universe.getColumns(); ++j) {
+                field[i][j].smaller();
+            }
+        }
+        scrollPane.setViewportView(this);
     }
 }
