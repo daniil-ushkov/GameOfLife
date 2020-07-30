@@ -18,6 +18,19 @@ public class UniversePanel extends GOLPanel {
 
     public final UniverseScrollPane scrollPane = new UniverseScrollPane(this);
 
+    @FunctionalInterface
+    private interface IntIntConsumer {
+        void apply(int i, int j);
+    }
+
+    private void forEachCell(IntIntConsumer consumer) {
+        for (int i = 0; i < universe.getRows(); ++i) {
+            for (int j = 0; j < universe.getColumns(); ++j) {
+                consumer.apply(i, j);
+            }
+        }
+    }
+
     public UniversePanel(int rows, int columns) {
         super();
         universe = new Universe(rows, columns);
@@ -25,20 +38,18 @@ public class UniversePanel extends GOLPanel {
         setLayout(layout);
         GridBagConstraints constraints = new GridBagConstraints();
         field = new CellButton[rows][columns];
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < columns; ++j) {
-                CellButton cell = new CellButton();
-                field[i][j] = cell;
-                if (j + 1 == columns) {
-                    constraints.gridwidth = GridBagConstraints.REMAINDER;
-                } else {
-                    constraints.gridwidth = 1;
-                }
-                layout.setConstraints(cell, constraints);
-                add(cell);
-                cell.addActionListener(cellButtonListener(i, j));
+        forEachCell((i, j) -> {
+            CellButton cell = new CellButton();
+            field[i][j] = cell;
+            if (j + 1 == columns) {
+                constraints.gridwidth = GridBagConstraints.REMAINDER;
+            } else {
+                constraints.gridwidth = 1;
             }
-        }
+            layout.setConstraints(cell, constraints);
+            add(cell);
+            cell.addActionListener(cellButtonListener(i, j));
+        });
     }
 
     private ActionListener cellButtonListener(int i, int j) {
@@ -63,23 +74,18 @@ public class UniversePanel extends GOLPanel {
     }
 
     private void showUniverse() {
-        for (int i = 0; i < universe.getRows(); ++i) {
-            for (int j = 0; j < universe.getColumns(); ++j) {
-                if (universe.aliveCell(i, j)) {
-                    setGreen(i, j);
-                } else {
-                    setBlack(i, j);
-                }
+        forEachCell((i, j) -> {
+            if (universe.aliveCell(i, j)) {
+                setGreen(i, j);
+            } else {
+                setBlack(i, j);
             }
-        }
+        });
+
     }
 
     private void setButtonsEnabled(boolean enable) {
-        for (int i = 0; i < universe.getRows(); ++i) {
-            for (int j = 0; j < universe.getColumns(); ++j) {
-                field[i][j].setEnabled(enable);
-            }
-        }
+        forEachCell((i, j) -> field[i][j].setEnabled(enable));
     }
 
     public void start(IntSupplier latencySupplier) {
@@ -142,20 +148,12 @@ public class UniversePanel extends GOLPanel {
     }
 
     public void bigger() {
-        for (int i = 0; i < universe.getRows(); ++i) {
-            for (int j = 0; j < universe.getColumns(); ++j) {
-                field[i][j].bigger();
-            }
-        }
+        forEachCell((i, j) -> field[i][j].bigger());
         scrollPane.setViewportView(this);
     }
 
     public void smaller() {
-        for (int i = 0; i < universe.getRows(); ++i) {
-            for (int j = 0; j < universe.getColumns(); ++j) {
-                field[i][j].smaller();
-            }
-        }
+        forEachCell((i, j) -> field[i][j].smaller());
         scrollPane.setViewportView(this);
     }
 }
