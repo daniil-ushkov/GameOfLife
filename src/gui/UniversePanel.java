@@ -12,7 +12,7 @@ public class UniversePanel extends GOLPanel {
     private final Universe universe;
     private final CellButton[][] field;
 
-    private boolean startPressed = false;
+    private Thread thread;
 
     private final Memory memory = new Memory();
 
@@ -88,27 +88,31 @@ public class UniversePanel extends GOLPanel {
         forEachCell((i, j) -> field[i][j].setEnabled(enable));
     }
 
+    private boolean isAlive() {
+        return thread != null && thread.isAlive();
+    }
+
     public void start(IntSupplier latencySupplier) {
-        if (startPressed) {
+        if (isAlive()) {
             return;
         }
-        startPressed = true;
-        new Thread(() -> {
+        thread = new Thread(() -> {
             setButtonsEnabled(false);
-            while (startPressed) {
+            while (!thread.isInterrupted()) {
                 doNext();
                 try {
                     Thread.sleep(latencySupplier.getAsInt());
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    break;
                 }
             }
             setButtonsEnabled(true);
-        }).start();
+        });
+        thread.start();
     }
 
     public void stop() {
-        startPressed = false;
+        thread.interrupt();
     }
 
     private void doNext() {
@@ -122,14 +126,14 @@ public class UniversePanel extends GOLPanel {
     }
 
     public void next() {
-        if (startPressed) {
+        if (isAlive()) {
             return;
         }
         doNext();
     }
 
     public void prev() {
-        if (startPressed) {
+        if (isAlive()) {
             return;
         }
         if (!memory.empty()) {
@@ -139,7 +143,7 @@ public class UniversePanel extends GOLPanel {
     }
 
     public void clear() {
-        if (startPressed) {
+        if (isAlive()) {
             stop();
         }
         memory.push(universe.getFieldCopy());
